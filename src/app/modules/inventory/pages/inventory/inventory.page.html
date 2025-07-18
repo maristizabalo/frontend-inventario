@@ -1,0 +1,30 @@
+<ion-content class="ion-padding">
+  <h1>Inventario</h1>
+
+  <ion-button expand="block" (click)="toggleForm()">
+    {{ showForm ? 'Cancelar' : 'Agregar Producto' }}
+  </ion-button>
+
+  <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="addProduct()">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input formControlName="nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-input formControlName="descripcion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Stock</ion-label>
+      <ion-input type="number" formControlName="stock"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="primary">Agregar Producto</ion-button>
+  </form>
+
+  <app-list-products></app-list-products>
+
+  <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+</ion-content>

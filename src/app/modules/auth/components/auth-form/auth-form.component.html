@@ -1,0 +1,43 @@
+<ion-content class="ion-padding ion-text-center auth-content">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+    <ion-list
+      class="ion-no-padding"
+      [class.login-style]="type === 'login'"
+      [class.register-style]="type === 'register'"
+    >
+      <ion-item lines="none">
+        <ion-icon name="person" slot="start"></ion-icon>
+        <ion-input
+          label="Usuario"
+          labelPlacement="floating"
+          formControlName="username"
+          type="text"
+          placeholder="Tu usuario"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-icon name="lock-closed" slot="start"></ion-icon>
+        <ion-input
+          label="Contraseña"
+          labelPlacement="floating"
+          formControlName="password"
+          type="password"
+          placeholder="Tu contraseña"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" color="primary" type="submit" class="ion-margin-top">
+      {{ type === 'login' ? 'Iniciar Sesión' : 'Registrarse' }}
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" color="medium" type="button" (click)="navigate()">
+      {{
+        type === 'login'
+          ? '¿No tienes cuenta? Regístrate'
+          : '¿Ya tienes cuenta? Inicia sesión'
+      }}
+    </ion-button>
+  </form>
+</ion-content>

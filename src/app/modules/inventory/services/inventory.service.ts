@@ -12,4 +12,8 @@ export class InventoryService {
   getProducts(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+
+  createProduct(data: any) {
+    return this.http.post(API_CONFIG.INVENTORY, data);
+  }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { API_CONFIG } from 'src/app/core/config/auth.config';
+import { API_CONFIG } from 'src/app/core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

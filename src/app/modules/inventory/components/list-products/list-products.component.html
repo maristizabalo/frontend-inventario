@@ -1,17 +1,24 @@
 <ion-content class="ion-padding">
   <h2>Lista de Productos</h2>
 
-  <ion-card *ngFor="let product of products">
-    <ion-card-header>
-      <ion-card-title>{{ product.nombre }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>{{ product.descripcion }}</p>
-      <p><strong>Stock:</strong> {{ product.stock }}</p>
-    </ion-card-content>
-  </ion-card>
+  <ng-container *ngIf="loading; else productsList">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando productos...</p>
+  </ng-container>
 
-  <ion-refresher slot="fixed" (ionRefresh)="loadProducts($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+  <ng-template #productsList>
+    <ion-card *ngFor="let product of products">
+      <ion-card-header>
+        <ion-card-title>{{ product.nombre }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ product.descripcion }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-refresher slot="fixed" (ionRefresh)="loadProducts($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+  </ng-template>
 </ion-content>

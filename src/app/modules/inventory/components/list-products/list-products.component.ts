@@ -12,6 +12,7 @@ import { InventoryService } from '../../services/inventory.service';
 })
 export class ListProductsComponent implements OnInit {
   products: any[] = [];
+  loading: boolean = false;
 
   constructor(private inventoryService: InventoryService) {}
 
@@ -20,15 +21,19 @@ export class ListProductsComponent implements OnInit {
   }
 
   loadProducts(event?: any) {
+    this.loading = true;
     this.inventoryService.getProducts().subscribe({
       next: (res) => {
         this.products = res;
+        this.loading = false;
         if (event) event.target.complete();
       },
       error: (err) => {
         console.error(err);
+        this.loading = false;
         if (event) event.target.complete();
       },
     });
   }
 }
+

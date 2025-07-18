@@ -1,18 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { IonContent, IonTitle } from "@ionic/angular/standalone";
+import { Router } from '@angular/router';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
+import { Component } from '@angular/core';
+import { IonContent } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonTitle, IonContent, AuthFormComponent]
+  imports: [AuthFormComponent, IonContent],
+  template: `
+    <ion-content class="ion-padding">
+      <h1>Iniciar Sesión</h1>
+      <app-auth-form
+        [type]="'login'"
+        (onSubmit)="handleSubmit($event)"
+        (onNavigate)="goToRegister()"
+      >
+      </app-auth-form>
+    </ion-content>
+  `,
 })
-export class LoginPage  implements OnInit {
+export class LoginPage {
+  constructor(private router: Router) {}
 
-  constructor() { }
+  handleSubmit(type: 'login' | 'register') {
+    if (type === 'login') {
+      this.router.navigate(['/inventory']);
+    }
+  }
 
-  ngOnInit() {}
-
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
 }

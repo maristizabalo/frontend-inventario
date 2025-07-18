@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, LoadingController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { person, lockClosed } from 'ionicons/icons';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-auth-form',
@@ -14,7 +15,7 @@ import { person, lockClosed } from 'ionicons/icons';
 })
 export class AuthFormComponent {
   @Input() type: 'login' | 'register' = 'login';
-  @Output() onSubmit = new EventEmitter<any>();
+  @Output() onSubmit = new EventEmitter<'login' | 'register'>();
   @Output() onNavigate = new EventEmitter<void>();
 
   form = this.fb.group({
@@ -22,12 +23,72 @@ export class AuthFormComponent {
     password: [''],
   });
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController
+  ) {
     addIcons({ person, lockClosed });
   }
 
-  submit() {
-    this.onSubmit.emit(this.form.value);
+  async showErrorToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color: 'danger',
+      position: 'top',
+    });
+    await toast.present();
+  }
+
+  async showSuccessToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color: 'success',
+      position: 'top',
+    });
+    await toast.present();
+  }
+
+  async submit() {
+    const loading = await this.loadingCtrl.create({
+      message: this.type === 'login' ? 'Iniciando sesión...' : 'Registrando...',
+      spinner: 'crescent',
+    });
+    await loading.present();
+
+    if (this.type === 'login') {
+      this.authService
+        .login(this.form.value as { username: string; password: string })
+        .subscribe({
+          next: async (res) => {
+            localStorage.setItem('access_token', res.access);
+            await loading.dismiss();
+            await this.showSuccessToast('¡Inicio de sesión exitoso!');
+            this.onSubmit.emit('login');
+          },
+          error: async (err) => {
+            await loading.dismiss();
+            await this.showErrorToast(err);
+          },
+        });
+    } else {
+      this.authService
+        .register(this.form.value as { username: string; password: string })
+        .subscribe({
+          next: async () => {
+            await loading.dismiss();
+            await this.showSuccessToast('¡Usuario registrado correctamente!');
+            this.onSubmit.emit('register');
+          },
+          error: async (err) => {
+            await loading.dismiss();
+            await this.showErrorToast(err);
+          },
+        });
+    }
   }
 
   navigate() {

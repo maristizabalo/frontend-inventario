@@ -1,20 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  selector: 'app-register',
+  template: `
+    <ion-content class="ion-padding">
+      <h1>Crear Cuenta</h1>
+      <app-auth-form
+        [type]="'register'"
+        (onSubmit)="handleSubmit($event)"
+        (onNavigate)="goToLogin()"
+      >
+      </app-auth-form>
+    </ion-content>
+  `,
+  imports: [IonicModule, CommonModule, AuthFormComponent],
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage {
+  constructor(private router: Router) {}
 
-  constructor() { }
-
-  ngOnInit() {
+  handleSubmit(type: 'login' | 'register') {
+    if (type === 'register') {
+      this.router.navigate(['/login']);
+    }
   }
 
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
 }
